@@ -1,6 +1,14 @@
 # Kueue Perf & Scale testing
 
 
+## Kueue deployment
+
+Kueue can be deployed in OCP with
+
+```shell
+oc apply --server-side -f https://github.com/kubernetes-sigs/kueue/releases/download/v0.10.1/manifests.yaml
+```
+
 ## Prometheus queries
 
 

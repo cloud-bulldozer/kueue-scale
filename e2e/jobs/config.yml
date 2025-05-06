@@ -23,6 +23,7 @@ metricsEndpoints:
   
 jobs:
 
+{{ if eq .kueue true }}
   - name: prereqs
     jobIterations: 1
     namespace: kueue-scale
@@ -38,7 +39,8 @@ jobs:
       
       - objectTemplate: resource-flavor.yml
         replicas: 1
-      
+{{ end }}
+
   - name: small
     namespace: kueue-scale-s
     jobIterations: 1

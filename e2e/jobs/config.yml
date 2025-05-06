@@ -35,7 +35,7 @@ jobs:
         inputVars:
           CPU_QUOTA: 150
           MEMORY_QUOTA: 480Gi
-          PODS_QUOTA: 700
+          PODS_QUOTA: 2000
       
       - objectTemplate: resource-flavor.yml
         replicas: 1

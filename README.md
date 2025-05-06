@@ -1,0 +1,30 @@
+# Kueue Perf & Scale testing
+
+
+## Prometheus queries
+
+
+```yaml
+# Jobs
+
+- query: count(kube_job_info{namespace=~"kueue-scale-.+"})
+  metricName: totalJobs
+
+- query: sum(kube_pod_status_phase{namespace=~"kueue-scale-.+"}) by (phase)
+  metricName: podStatusCount > 0
+
+- query: avg(kube_job_status_completion_time{namespace=~"kueue-scale-.+"} - kube_job_status_start_time{namespace=~"kueue-scale-.+"}) by (namespace)
+  metricName: avgJobCompletionTime
+
+- query: quantile(0.90,kube_job_status_completion_time{namespace=~"kueue-scale-.+"} - kube_job_status_start_time{namespace=~"kueue-scale-.+"}) by (namespace)
+  metricName: p90JobCompletionTime
+
+
+# Pod CPU & memory
+
+- query: (sum(irate(container_cpu_usage_seconds_total{name!="",container!="POD",namespace=~"kueue-system|openshift-kube-scheduler|openshift-kube-apiserver"}[2m])) by (pod,namespace)) > 0
+  metricName: kueueCPUUsage
+
+- query: (sum(container_memory_working_set_bytes{name!="",container!="POD",namespace=~"kueue-system|openshift-kube-scheduler|openshift-kube-apiserver"}) by (pod,namespace)) > 0
+  metricName: kueueMemoryUsage
+ ```

@@ -23,7 +23,7 @@ metricsEndpoints:
   
 jobs:
 
-{{ if eq .kueue true }}
+{{ if eq $kueue true }}
   - name: prereqs
     jobIterations: 1
     namespace: kueue-scale

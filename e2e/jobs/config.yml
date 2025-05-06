@@ -1,5 +1,5 @@
-{{$runtime := "10s"}}
-{{$kueue := false}}
+{{$runtime := "10s"}} # Job runtime
+{{$kueue := true}} # Switch to disable kueue scheduler in jobs
 
 global:
   gc: {{.GC}}

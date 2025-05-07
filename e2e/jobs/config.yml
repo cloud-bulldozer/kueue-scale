@@ -1,5 +1,5 @@
 {{$runtime := "10s"}} # Job runtime
-{{$kueue := true}}    # Toggle to disable the Kueue controller for jobs
+{{$kueue := true }}    # Toggle to disable the Kueue controller for jobs
 
 global:
   gc: {{.GC}}
@@ -55,8 +55,10 @@ jobs:
     preLoadPeriod: 15s
     objects:
 
+{{ if eq $kueue true }}
       - objectTemplate: local-queue.yml
         replicas: 1
+{{ end }}
 
       - objectTemplate: job.yml
         replicas: 20
@@ -74,8 +76,10 @@ jobs:
     burst: {{.BURST}}
     objects:
 
+{{ if eq $kueue true }}
       - objectTemplate: local-queue.yml
         replicas: 1
+{{ end }}
 
       - objectTemplate: job.yml
         replicas: 100
@@ -93,8 +97,10 @@ jobs:
     burst: {{.BURST}}
     objects:
 
+{{ if eq $kueue true }}
       - objectTemplate: local-queue.yml
         replicas: 1
+{{ end }}
 
       - objectTemplate: job.yml
         replicas: 200
@@ -112,8 +118,10 @@ jobs:
     burst: {{.BURST}}
     objects:
 
+{{ if eq $kueue true }}
       - objectTemplate: local-queue.yml
         replicas: 1
+{{ end }}
 
       - objectTemplate: job.yml
         replicas: 400

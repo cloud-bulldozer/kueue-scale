@@ -4,14 +4,7 @@
   metricName: totalJobs
 
 - query: sum(kube_pod_status_phase{namespace=~"kueue-scale-.+"}) by (phase)
-  metricName: podStatusCount > 0
-
-- query: avg(kube_job_status_completion_time{namespace=~"kueue-scale-.+"} - kube_job_status_start_time{namespace=~"kueue-scale-.+"}) by (namespace)
-  metricName: avgJobCompletionTime
-
-- query: quantile(0.90,kube_job_status_completion_time{namespace=~"kueue-scale-.+"} - kube_job_status_start_time{namespace=~"kueue-scale-.+"}) by (namespace)
-  metricName: p90JobCompletionTime
-
+  metricName: podStatusCount
 
 # Pod CPU & memory
 

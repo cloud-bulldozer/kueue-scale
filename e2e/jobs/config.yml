@@ -9,10 +9,10 @@ global:
 metricsEndpoints:
 
 {{ if .ES_SERVER }}
-  - metrics: [{{.METRICS}}]
-    indexer:
   - metrics: [metrics.yml]
+    indexer:
       insecureSkipVerify: true
+      esServers: [{{.ES_SERVER}}]
       defaultIndex: {{.ES_INDEX}}
       type: opensearch      
 {{ end }}

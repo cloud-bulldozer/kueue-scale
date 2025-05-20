@@ -1,0 +1,68 @@
+{{$runtime := "10s"}} # Job runtime
+
+global:
+  gc: {{.GC}}
+  gcMetrics: false
+  measurements:
+  - name: podLatency
+metricsEndpoints:
+
+{{ if .ES_SERVER }}
+  - metrics: [metrics.yml]
+    indexer:
+      insecureSkipVerify: true
+      esServers: [{{.ES_SERVER}}]
+      defaultIndex: {{.ES_INDEX}}
+      type: opensearch      
+{{ end }}
+{{ if eq .LOCAL_INDEXING "true" }}
+  - metrics: [metrics.yml]
+    indexer:
+      type: local
+      metricsDirectory: collected-metrics-{{.UUID}}
+{{ end }}
+  
+jobs:
+
+{{ if eq .KUEUE "true" }}
+  - name: prereqs
+    jobIterations: 1
+    namespace: kueue-scale
+    preLoadImages: false
+    namespacedIterations: false
+    cleanup: false
+    skipIndexing: true
+    objects:
+
+      - objectTemplate: cluster-queue.yml
+        replicas: 1
+        inputVars:
+          CPU_QUOTA: 150
+          MEMORY_QUOTA: 480Gi
+          PODS_QUOTA: 2000
+      
+      - objectTemplate: resource-flavor.yml
+        replicas: 1
+{{ end }}
+
+  - name: extra-large
+    namespace: kueue-scale-xl
+    jobIterations: 1
+    preLoadImages: false
+    namespacedIterations: false
+    cleanup: true
+    namespaceLabels:
+     kueue.openshift.io/managed: {{.KUEUE}}
+    qps: {{.QPS}}
+    burst: {{.BURST}}
+    objects:
+
+{{ if eq .KUEUE "true" }}
+      - objectTemplate: local-queue.yml
+        replicas: 1
+{{ end }}
+
+      - objectTemplate: pod.yml
+        replicas: 2000
+        inputVars:
+          kueue: {{.KUEUE}}

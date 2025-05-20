@@ -9,6 +9,9 @@ Kueue can be deployed in OCP with
 oc apply --server-side -f https://github.com/kubernetes-sigs/kueue/releases/download/v0.10.1/manifests.yaml
 ```
 
+[Kueue operator](https://github.com/openshift/kueue-operator) is also available  and is now the recommended way to deploy Kueue.
+
+
 ## Prometheus queries
 
 

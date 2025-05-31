@@ -20,14 +20,14 @@
   metricName: cpu-etcd-avg
   instant: true
 
-- query: max(max_over_time(topk(3, sum(container_memory_working_set_bytes{name!="", namespace="openshift-kube-apiserver"}))[{{.elapsed}}:]))
+- query: max(max_over_time(sum(container_memory_working_set_bytes{name!="", namespace="openshift-kube-apiserver"})[{{.elapsed}}:]))
   metricName: max-memory-kube-apiserver-aggregated
   instant: true
 
-- query: max(max_over_time(topk(3, sum(container_memory_working_set_bytes{pod=~"kueue-controller-manager-.*", name="", namespace="openshift-kueue-operator"}))[{{.elapsed}}:]))
+- query: max(max_over_time(sum(container_memory_working_set_bytes{pod=~"kueue-controller-manager-.*", name="", namespace="openshift-kueue-operator"})[{{.elapsed}}:]))
   metricName: max-memory-kueue-aggregated
 
-- query: max(max_over_time(topk(3,sum(container_memory_rss{name!="", namespace="openshift-etcd"}))[{{.elapsed}}:]))
+- query: max(max_over_time(sum(container_memory_rss{name!="", namespace="openshift-etcd"})[{{.elapsed}}:]))
   metricName: max-memory-etcd-aggregated
   instant: true
 

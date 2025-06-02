@@ -1,5 +1,5 @@
-{{$runtime := "10s"}} # Job runtime
-{{$kueue := true }}    # Toggle to disable the Kueue controller for jobs
+{{$runtime := "10s"}}                 # Job runtime
+{{$parallelism := env "PARALLELISM"}}
 
 global:
   gc: {{.GC}}
@@ -25,10 +25,9 @@ metricsEndpoints:
   
 jobs:
 
-{{ if eq $kueue true }}
+{{ if eq .KUEUE "true" }}
   - name: prereqs
     jobIterations: 1
-    namespace: kueue-scale
     preLoadImages: false
     namespacedIterations: false
     skipIndexing: true
@@ -55,16 +54,16 @@ jobs:
     preLoadPeriod: 15s
     objects:
 
-{{ if eq $kueue true }}
+{{ if eq .KUEUE "true" }}
       - objectTemplate: local-queue.yml
         replicas: 1
 {{ end }}
 
       - objectTemplate: job.yml
-        replicas: 20
+        replicas: {{div 100 $parallelism}}
         inputVars:
-          kueue: {{$kueue}}
-          parallelism: 5
+          kueue: {{.KUEUE}}
+          parallelism: {{$parallelism}}
           runtime: {{$runtime}}
   
   - name: medium
@@ -76,16 +75,16 @@ jobs:
     burst: {{.BURST}}
     objects:
 
-{{ if eq $kueue true }}
+{{ if eq .KUEUE "true" }}
       - objectTemplate: local-queue.yml
         replicas: 1
 {{ end }}
 
       - objectTemplate: job.yml
-        replicas: 100
+        replicas: {{div 500 $parallelism}}
         inputVars:
-          kueue: {{$kueue}}
-          parallelism: 5
+          kueue: {{.KUEUE}}
+          parallelism: {{$parallelism}}
           runtime: {{$runtime}}
 
   - name: large
@@ -97,16 +96,16 @@ jobs:
     burst: {{.BURST}}
     objects:
 
-{{ if eq $kueue true }}
+{{ if eq .KUEUE "true" }}
       - objectTemplate: local-queue.yml
         replicas: 1
 {{ end }}
 
       - objectTemplate: job.yml
-        replicas: 200
+        replicas: {{div 1000 $parallelism}}
         inputVars:
-          kueue: {{$kueue}}
-          parallelism: 5
+          kueue: {{.KUEUE}}
+          parallelism: {{$parallelism}}
           runtime: {{$runtime}}
 
   - name: extra-large
@@ -118,14 +117,14 @@ jobs:
     burst: {{.BURST}}
     objects:
 
-{{ if eq $kueue true }}
+{{ if eq .KUEUE "true" }}
       - objectTemplate: local-queue.yml
         replicas: 1
 {{ end }}
 
       - objectTemplate: job.yml
-        replicas: 400
+        replicas: {{div 2000 $parallelism}}
         inputVars:
-          kueue: {{$kueue}}
-          parallelism: 5
+          kueue: {{.KUEUE}}
+          parallelism: {{$parallelism}}
           runtime: {{$runtime}}

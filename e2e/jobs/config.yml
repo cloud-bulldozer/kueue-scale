@@ -9,7 +9,7 @@ global:
 metricsEndpoints:
 
 {{ if .ES_SERVER }}
-  - metrics: [metrics.yml]
+  - metrics: [kueue-metrics.yml]
     indexer:
       insecureSkipVerify: true
       esServers: [{{.ES_SERVER}}]
@@ -17,7 +17,7 @@ metricsEndpoints:
       type: opensearch      
 {{ end }}
 {{ if eq .LOCAL_INDEXING "true" }}
-  - metrics: [metrics.yml]
+  - metrics: [kueue-metrics.yml]
     indexer:
       type: local
       metricsDirectory: collected-metrics-{{.UUID}}
@@ -49,7 +49,7 @@ jobs:
     jobIterations: 1
     namespacedIterations: false
     namespaceLabels:
-       kueue.openshift.io/managed: "true"
+      kueue.openshift.io/managed: "true"
     qps: {{.QPS}}
     burst: {{.BURST}}
     preLoadImages: false
@@ -74,7 +74,7 @@ jobs:
     preLoadImages: false
     namespacedIterations: false
     namespaceLabels:
-       kueue.openshift.io/managed: "true"
+      kueue.openshift.io/managed: "true"
     qps: {{.QPS}}
     burst: {{.BURST}}
     objects:
@@ -97,7 +97,7 @@ jobs:
     preLoadImages: false
     namespacedIterations: false
     namespaceLabels:
-       kueue.openshift.io/managed: "true"
+      kueue.openshift.io/managed: "true"
     qps: {{.QPS}}
     burst: {{.BURST}}
     objects:
@@ -120,7 +120,7 @@ jobs:
     preLoadImages: false
     namespacedIterations: false
     namespaceLabels:
-       kueue.openshift.io/managed: "true"
+      kueue.openshift.io/managed: "true"
     qps: {{.QPS}}
     burst: {{.BURST}}
     objects:

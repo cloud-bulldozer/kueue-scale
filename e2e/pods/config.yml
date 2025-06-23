@@ -8,7 +8,7 @@ global:
 metricsEndpoints:
 
 {{ if .ES_SERVER }}
-  - metrics: [metrics.yml]
+  - metrics: [kueue-metrics.yml]
     indexer:
       insecureSkipVerify: true
       esServers: [{{.ES_SERVER}}]
@@ -16,7 +16,7 @@ metricsEndpoints:
       type: opensearch      
 {{ end }}
 {{ if eq .LOCAL_INDEXING "true" }}
-  - metrics: [metrics.yml]
+  - metrics: [kueue-metrics.yml]
     indexer:
       type: local
       metricsDirectory: collected-metrics-{{.UUID}}

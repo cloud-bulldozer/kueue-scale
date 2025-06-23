@@ -48,6 +48,8 @@ jobs:
     namespace: kueue-scale-s
     jobIterations: 1
     namespacedIterations: false
+    namespaceLabels:
+       kueue.openshift.io/managed: "true"
     qps: {{.QPS}}
     burst: {{.BURST}}
     preLoadImages: false
@@ -71,6 +73,8 @@ jobs:
     jobIterations: 1
     preLoadImages: false
     namespacedIterations: false
+    namespaceLabels:
+       kueue.openshift.io/managed: "true"
     qps: {{.QPS}}
     burst: {{.BURST}}
     objects:
@@ -92,6 +96,8 @@ jobs:
     jobIterations: 1
     preLoadImages: false
     namespacedIterations: false
+    namespaceLabels:
+       kueue.openshift.io/managed: "true"
     qps: {{.QPS}}
     burst: {{.BURST}}
     objects:
@@ -113,6 +119,8 @@ jobs:
     jobIterations: 1
     preLoadImages: false
     namespacedIterations: false
+    namespaceLabels:
+       kueue.openshift.io/managed: "true"
     qps: {{.QPS}}
     burst: {{.BURST}}
     objects:

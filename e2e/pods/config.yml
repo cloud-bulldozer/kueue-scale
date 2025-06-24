@@ -32,6 +32,8 @@ jobs:
     namespacedIterations: false
     cleanup: false
     skipIndexing: true
+    qps: {{.QPS}}
+    burst: {{.BURST}}
     objects:
 
       - objectTemplate: cluster-queue.yml

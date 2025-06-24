@@ -52,7 +52,7 @@ jobs:
     namespacedIterations: false
     cleanup: true
     namespaceLabels:
-     kueue.openshift.io/managed: {{.KUEUE}}
+      kueue.openshift.io/managed: {{.KUEUE}}
     qps: {{.QPS}}
     burst: {{.BURST}}
     objects:

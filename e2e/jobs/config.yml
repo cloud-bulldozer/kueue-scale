@@ -28,9 +28,11 @@ jobs:
 {{ if eq .KUEUE "true" }}
   - name: prereqs
     jobIterations: 1
-    preLoadImages: false
+    preLoadImages: true
     namespacedIterations: false
     skipIndexing: true
+    qps: {{.QPS}}
+    burst: {{.BURST}}
     objects:
 
       - objectTemplate: cluster-queue.yml
@@ -44,81 +46,12 @@ jobs:
         replicas: 1
 {{ end }}
 
-  - name: small
-    namespace: kueue-scale-s
-    jobIterations: 1
-    namespacedIterations: false
-    namespaceLabels:
-      kueue.openshift.io/managed: "true"
-    qps: {{.QPS}}
-    burst: {{.BURST}}
-    preLoadImages: false
-    preLoadPeriod: 15s
-    objects:
-
-{{ if eq .KUEUE "true" }}
-      - objectTemplate: local-queue.yml
-        replicas: 1
-{{ end }}
-
-      - objectTemplate: job.yml
-        replicas: {{div 100 $parallelism}}
-        inputVars:
-          kueue: {{.KUEUE}}
-          parallelism: {{$parallelism}}
-          runtime: {{$runtime}}
-  
-  - name: medium
-    namespace: kueue-scale-m
-    jobIterations: 1
-    preLoadImages: false
-    namespacedIterations: false
-    namespaceLabels:
-      kueue.openshift.io/managed: "true"
-    qps: {{.QPS}}
-    burst: {{.BURST}}
-    objects:
-
-{{ if eq .KUEUE "true" }}
-      - objectTemplate: local-queue.yml
-        replicas: 1
-{{ end }}
-
-      - objectTemplate: job.yml
-        replicas: {{div 500 $parallelism}}
-        inputVars:
-          kueue: {{.KUEUE}}
-          parallelism: {{$parallelism}}
-          runtime: {{$runtime}}
-
-  - name: large
-    namespace: kueue-scale-l
-    jobIterations: 1
-    preLoadImages: false
-    namespacedIterations: false
-    namespaceLabels:
-      kueue.openshift.io/managed: "true"
-    qps: {{.QPS}}
-    burst: {{.BURST}}
-    objects:
-
-{{ if eq .KUEUE "true" }}
-      - objectTemplate: local-queue.yml
-        replicas: 1
-{{ end }}
-
-      - objectTemplate: job.yml
-        replicas: {{div 1000 $parallelism}}
-        inputVars:
-          kueue: {{.KUEUE}}
-          parallelism: {{$parallelism}}
-          runtime: {{$runtime}}
-
   - name: extra-large
     namespace: kueue-scale-xl
     jobIterations: 1
-    preLoadImages: false
+    preLoadImages: true
     namespacedIterations: false
+    cleanup: true
     namespaceLabels:
       kueue.openshift.io/managed: "true"
     qps: {{.QPS}}

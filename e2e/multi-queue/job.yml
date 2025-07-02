@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kueue-scale-{{.Replica}}
+  labels:
+    group: test-job
+{{ if eq .kueue true }}
+  annotations:
+    kueue.x-k8s.io/queue-name: kueue-scale
+{{ end }}
+spec:
+  parallelism: {{.parallelism}}
+  completions: {{.parallelism}}
+  completionMode: Indexed
+  template:
+    spec:
+      containers:
+      - name: sleep
+        image: gcr.io/k8s-staging-perf-tests/sleep:v0.1.0
+        args:
+          - {{.runtime}}
+        imagePullPolicy: IfNotPresent
+      restartPolicy: Never

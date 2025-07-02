@@ -50,7 +50,7 @@ jobs:
   - name: extra-large
     namespace: kueue-scale-xl
     jobIterations: 1
-    preLoadImages: false
+    preLoadImages: true
     namespacedIterations: false
     cleanup: true
     namespaceLabels:

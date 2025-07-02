@@ -1,15 +1,16 @@
-# Workload that creates a 3 cluster queues one shared and another two that can borrow resources from the shared one
-{{$runtime := "10s"}} # Job runtime
+# Workload that creates a 11 cluster queues one shared and another ten that can borrow resources from the shared one
+{{$runtime := "10s"}}
+{{$parallelism := 5}}
 
 global:
   gc: {{.GC}}
   gcMetrics: false
   measurements:
-  - name: podLatency
+  - name: jobLatency
 metricsEndpoints:
 
 {{ if .ES_SERVER }}
-  - metrics: [metrics.yml]
+  - metrics: [kueue-metrics.yml]
     indexer:
       insecureSkipVerify: true
       esServers: [{{.ES_SERVER}}]
@@ -17,7 +18,7 @@ metricsEndpoints:
       type: opensearch      
 {{ end }}
 {{ if eq .LOCAL_INDEXING "true" }}
-  - metrics: [metrics.yml]
+  - metrics: [kueue-metrics.yml]
     indexer:
       type: local
       metricsDirectory: collected-metrics-{{.UUID}}
@@ -28,34 +29,32 @@ jobs:
 {{ if eq .KUEUE "true" }}
   - name: prereqs
     jobIterations: 1
-    namespace: kueue-scale
     preLoadImages: false
     namespacedIterations: false
-    cleanup: false
     skipIndexing: true
+    qps: 10
+    burst: 10
     objects:
-
-      - objectTemplate: cluster-queue-team-ab.yml
-        replicas: 1
+     
+      - objectTemplate: cluster-queue.yml
+        replicas: 10
         inputVars:
-          CPU_QUOTA: 150
-          MEMORY_QUOTA: 480Gi
-          PODS_QUOTA: 2000
-      
+          PODS_QUOTA: 400
+
       - objectTemplate: resource-flavor.yml
         replicas: 1
 {{ end }}
 
-  - name: extra-large
-    namespace: kueue-scale-xl
-    jobIterations: 1
-    preLoadImages: false
-    namespacedIterations: false
+  - name: kueue-scale
+    namespace: kueue-scale
+    jobIterations: 10
+    preLoadImages: false # TODO
+    namespacedIterations: true
     cleanup: true
     namespaceLabels:
-     kueue.openshift.io/managed: {{.KUEUE}}
-    qps: {{.QPS}}
-    burst: {{.BURST}}
+      kueue.openshift.io/managed: {{.KUEUE}}
+    qps: 10
+    burst: 10
     objects:
 
 {{ if eq .KUEUE "true" }}
@@ -63,9 +62,9 @@ jobs:
         replicas: 1
 {{ end }}
 
-      - objectTemplate: pod.yml
-        replicas: 2000
+      - objectTemplate: job.yml
+        replicas: 100
         inputVars:
           kueue: {{.KUEUE}}
-
-
+          parallelism: {{$parallelism}}
+          runtime: {{$runtime}}

@@ -30,7 +30,7 @@ jobs:
     namespace: kueue-scale
     preLoadImages: false
     namespacedIterations: false
-    cleanup: false
+    cleanup: true
     skipIndexing: true
     qps: {{.QPS}}
     burst: {{.BURST}}

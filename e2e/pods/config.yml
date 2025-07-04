@@ -32,8 +32,8 @@ jobs:
     namespacedIterations: false
     cleanup: true
     skipIndexing: true
-    qps: {{.QPS}}
-    burst: {{.BURST}}
+    qps: 5
+    burst: 5
     objects:
 
       - objectTemplate: cluster-queue.yml
@@ -47,16 +47,16 @@ jobs:
         replicas: 1
 {{ end }}
 
-  - name: extra-large
-    namespace: kueue-scale-xl
+  - name: kueue-scale
+    namespace: kueue-scale
     jobIterations: 1
     preLoadImages: true
     namespacedIterations: false
     cleanup: true
     namespaceLabels:
       kueue.openshift.io/managed: {{.KUEUE}}
-    qps: {{.QPS}}
-    burst: {{.BURST}}
+    qps: 5
+    burst: 5
     objects:
 
 {{ if eq .KUEUE "true" }}
